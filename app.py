@@ -1,3 +1,8 @@
+# Author: Lim Kha Shing
+# Reference:
+# https://face-recognition.readthedocs.io/en/latest/_modules/face_recognition/api.html#compare_faces
+# https://raw.githubusercontent.com/ageitgey/face_recognition/master/examples/web_service_example.py
+
 import os
 
 import cv2
@@ -19,7 +24,6 @@ middleware = RequestIdMiddleware(
     format='{status} {REQUEST_METHOD:<6} {REQUEST_PATH:<60} {REQUEST_ID}',
 )
 
-
 def get_error_result(source_type, is_no_files):
     if is_no_files:
         result = {
@@ -32,7 +36,6 @@ def get_error_result(source_type, is_no_files):
             "error": source_type + " extension is not correct"
         }
     return jsonify(result)
-
 
 def create_directories():
     # Check if upload and frames folder existed or not.
@@ -53,7 +56,6 @@ def create_directories():
     os.makedirs(request_upload_folder_path)
 
     return request_upload_folder_path, request_frames_folder_path
-
 
 def set_tolerance_and_threshold(tolerance, threshold, sharpness):
     if tolerance != '':
@@ -76,7 +78,6 @@ def set_tolerance_and_threshold(tolerance, threshold, sharpness):
     print("Sharpness threshold: ", sharpness)
     return tolerance, threshold, sharpness
 
-
 def check_files_uploaded():
     if request.files['known'].filename == '':
         print("no image uploaded")
@@ -86,14 +87,12 @@ def check_files_uploaded():
         return False, source_type_video
     return True, "pass"
 
-
 def check_valid_files_uploaded(known, unknown):
     if not known.filename.lower().endswith(ALLOWED__PICTURE_EXTENSIONS):
         return False, source_type_image
     if not unknown.filename.lower().endswith(ALLOWED_VIDEO_EXTENSIONS):
         return False, source_type_video
     return True, "pass"
-
 
 @app.route('/api/upload', methods=['POST'])
 def upload_image_video():
@@ -170,11 +169,9 @@ def upload_image_video():
                             face_match_threshold=threshold,
                             sharpness_threshold=sharpness)
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 if __name__ == '__main__':
     # add own IPV4 address for debug
@@ -182,3 +179,5 @@ if __name__ == '__main__':
     # for allow cross domain to LocalHost
     server = make_server('0.0.0.0', 8080, middleware)
     server.serve_forever()
+
+
